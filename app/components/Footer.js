@@ -1,7 +1,7 @@
 export default function Footer() {
   return (
     <footer className="bg-gradient-to-r from-gray-800 via-gray-900 to-black text-white py-12">
-      <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-8">
+      <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
         {/* About Section + Social Media */}
         <div>
           <h3 className="text-2xl font-bold mb-4 text-gradient">
@@ -96,9 +96,7 @@ export default function Footer() {
         {/* Contact Information */}
         <div>
           <h4 className="text-xl font-semibold mb-4">Contact Us</h4>
-          <p className="text-gray-400">
-            123 Future St, Innovation City, Country
-          </p>
+          <p className="text-gray-400">123 Future St, Innovation City</p>
           <p className="text-gray-400">Email: info@mrconsultants.com</p>
           <p className="text-gray-400">Phone: +123 456 7890</p>
         </div>
@@ -120,13 +118,13 @@ export default function Footer() {
 
       {/* Bottom Copyright */}
       <div className="mt-12 border-t border-gray-700 pt-4 text-center text-gray-500 text-sm">
-        <p>
-          © 2025 M R Consultants. All Rights Reserved. |
+        <p>© 2025 M R Consultants. All Rights Reserved.</p>
+        <p className="mt-1">
           <a
-            href="https://your-designer-link.com"
+            href="http://dubeyabhinav.netlify.app"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-neonBlue hover:underline ml-1"
+            className="text-neonBlue hover:underline"
           >
             Designed by Abhinav Dubey
           </a>
