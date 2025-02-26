@@ -25,29 +25,32 @@ export default function Services() {
   return (
     <section
       id="services"
-      className="relative py-20 bg-gradient-to-br from-gray-900 to-black overflow-hidden"
+      className="relative py-16 sm:py-20 bg-gradient-to-br from-gray-900 to-black overflow-hidden"
     >
-      {/* Futuristic animated background overlay */}
+      {/* Animated background overlay */}
       <div className="absolute inset-0 opacity-10">
-        <div
-          className="w-full h-full bg-[url('/futuristic-pattern.svg')] bg-cover bg-center animate-pulse"
-          // Replace the URL with your own futuristic pattern or animated SVG
-        ></div>
+        <div className="w-full h-full bg-[url('/futuristic-pattern.svg')] bg-cover bg-center animate-pulse"></div>
       </div>
-      <div className="relative max-w-6xl mx-auto px-6">
-        <h2 className="text-4xl font-bold text-center mb-12 text-neonBlue drop-shadow-lg">
+
+      <div className="relative max-w-6xl mx-auto px-4 sm:px-6">
+        {/* Title */}
+        <h2 className="text-3xl sm:text-4xl font-extrabold text-center mb-8 sm:mb-12 text-neonBlue drop-shadow-lg">
           Our Services
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+
+        {/* Services Grid - Mobile Optimized */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-10">
           {services.map((service, idx) => (
             <div
               key={idx}
-              className="bg-black bg-opacity-60 backdrop-blur-lg border border-gray-800 p-8 rounded-lg shadow-2xl hover:shadow-[0_0_20px_5px_rgba(0,188,212,0.5)] transition-all transform hover:scale-105"
+              className="bg-gray-800/50 border border-gray-700 backdrop-blur-lg p-6 sm:p-8 rounded-lg shadow-lg transform transition-all hover:scale-105 hover:shadow-neonBlue"
             >
-              <h3 className="text-2xl font-semibold mb-4 text-neonBlue">
+              <h3 className="text-xl sm:text-2xl font-semibold mb-3 text-neonBlue">
                 {service.title}
               </h3>
-              <p className="text-gray-300">{service.description}</p>
+              <p className="text-gray-300 text-sm sm:text-base">
+                {service.description}
+              </p>
             </div>
           ))}
         </div>

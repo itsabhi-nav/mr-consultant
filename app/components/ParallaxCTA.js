@@ -3,7 +3,10 @@ export default function ParallaxCTA() {
   return (
     <section
       className="relative bg-fixed bg-center bg-cover bg-no-repeat py-20"
-      style={{ backgroundImage: "url('/your-image.jpg')" }}
+      style={{
+        backgroundImage:
+          "url('https://png.pngtree.com/background/20210709/original/pngtree-creative-synthesis-city-comic-real-estate-picture-image_916360.jpg')",
+      }}
     >
       <div className="absolute inset-0 bg-black bg-opacity-50" />
       <div className="relative z-10 flex flex-col items-center justify-center text-center px-6">

@@ -5,7 +5,7 @@ export default function VideoSection() {
       <div className="absolute inset-0">
         <video
           className="w-full h-full object-cover"
-          src="/your-video.mp4"
+          src="/VIDEOMY.MP4"
           autoPlay
           loop
           muted

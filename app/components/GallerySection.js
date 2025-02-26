@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function GallerySection() {
@@ -39,27 +39,73 @@ export default function GallerySection() {
     },
   ];
 
-  const [selectedImage, setSelectedImage] = useState(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  // Auto-scroll functionality for mobile
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentIndex((prevIndex) =>
+        prevIndex === galleryItems.length - 1 ? 0 : prevIndex + 1
+      );
+    }, 3000); // Change every 3 seconds
+
+    return () => clearInterval(interval);
+  }, []);
 
   return (
-    <section className="py-20 bg-gray-900" id="gallery">
-      <div className="max-w-6xl mx-auto px-6 text-center">
-        <h2 className="text-4xl font-bold text-white mb-12">Gallery</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+    <section
+      className="py-12 bg-gradient-to-r from-gray-900 via-black to-gray-900 text-white"
+      id="gallery"
+    >
+      <div className="max-w-7xl mx-auto px-6 text-center">
+        <h2 className="text-3xl sm:text-5xl font-extrabold mb-6 uppercase tracking-wide">
+          Our <span className="text-neonBlue glow">Gallery</span>
+        </h2>
+
+        {/* Mobile: Auto-scroll single image */}
+        <div className="block md:hidden">
+          <div className="relative w-full max-w-md mx-auto">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={galleryItems[currentIndex].id}
+                className="relative rounded-lg overflow-hidden shadow-lg border border-gray-700 backdrop-blur-md"
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                transition={{ duration: 0.6 }}
+              >
+                <img
+                  src={galleryItems[currentIndex].image}
+                  alt={galleryItems[currentIndex].title}
+                  className="w-full h-64 object-cover rounded-lg transition-opacity duration-500"
+                  loading="lazy"
+                />
+                <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-0 hover:bg-opacity-50 transition-all duration-300">
+                  <span className="text-lg font-semibold text-white opacity-0 hover:opacity-100 transition-all duration-300">
+                    {galleryItems[currentIndex].title}
+                  </span>
+                </div>
+              </motion.div>
+            </AnimatePresence>
+          </div>
+        </div>
+
+        {/* Desktop: Three-Column Grid Layout */}
+        <div className="hidden md:grid md:grid-cols-3 gap-6 mt-6">
           {galleryItems.map((item) => (
             <motion.div
               key={item.id}
-              className="relative cursor-pointer overflow-hidden rounded-lg shadow-lg"
+              className="relative cursor-pointer overflow-hidden rounded-lg shadow-lg bg-gray-800/40 border border-gray-700 backdrop-blur-md transform transition-all hover:scale-105 hover:shadow-neonBlue"
               whileHover={{ scale: 1.05 }}
-              onClick={() => setSelectedImage(item)}
             >
               <img
                 src={item.image}
                 alt={item.title}
-                className="w-full h-64 object-cover"
+                className="w-full h-[350px] object-cover rounded-lg transition-opacity duration-300"
+                loading="lazy"
               />
-              <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-0 hover:bg-opacity-50 transition duration-300">
-                <span className="text-lg font-semibold text-white opacity-0 hover:opacity-100 transition duration-300">
+              <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-0 hover:bg-opacity-50 transition-all duration-300">
+                <span className="text-xl font-semibold text-white opacity-0 hover:opacity-100 transition-all duration-300">
                   {item.title}
                 </span>
               </div>
@@ -67,28 +113,6 @@ export default function GallerySection() {
           ))}
         </div>
       </div>
-
-      {/* Modal for Enlarged Image */}
-      <AnimatePresence>
-        {selectedImage && (
-          <motion.div
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setSelectedImage(null)}
-          >
-            <motion.img
-              src={selectedImage.image}
-              alt={selectedImage.title}
-              className="max-w-3xl max-h-full rounded-lg"
-              initial={{ scale: 0.8 }}
-              animate={{ scale: 1 }}
-              exit={{ scale: 0.8 }}
-            />
-          </motion.div>
-        )}
-      </AnimatePresence>
     </section>
   );
 }

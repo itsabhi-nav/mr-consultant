@@ -44,28 +44,42 @@ export default function TeamSection() {
   };
 
   return (
-    <section id="about" className="py-20 bg-gray-900 text-center">
-      <div className="max-w-6xl mx-auto px-6">
-        <h2 className="text-4xl font-bold mb-12">Meet the Team</h2>
+    <section
+      id="about"
+      className="py-16 sm:py-20 bg-gradient-to-br from-gray-900 to-black text-white"
+    >
+      <div className="max-w-6xl mx-auto px-4 sm:px-6">
+        {/* Title */}
+        <h2 className="text-3xl sm:text-4xl font-extrabold text-center mb-8 sm:mb-12 uppercase tracking-wide">
+          Meet Our <span className="text-neonBlue glow">Team</span>
+        </h2>
+
+        {/* Team Grid - Mobile Optimized */}
         <motion.div
-          className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8"
+          className="grid grid-cols-2 sm:grid-cols-4 gap-6 sm:gap-8"
           variants={containerVariants}
           initial="hidden"
-          animate="visible"
+          whileInView="visible"
+          viewport={{ once: true }}
         >
           {teamMembers.map((member, idx) => (
             <motion.div
               key={idx}
-              className="bg-black bg-opacity-50 p-6 rounded-lg hover:shadow-2xl transition"
+              className="bg-gray-800/50 border border-gray-700 backdrop-blur-lg p-4 sm:p-6 rounded-xl shadow-lg transform transition-all hover:scale-105 hover:shadow-neonBlue text-center"
               variants={itemVariants}
             >
               <img
                 src={member.image}
                 alt={member.name}
-                className="mx-auto mb-4 w-32 h-32 object-cover rounded-full"
+                className="mx-auto mb-3 sm:mb-4 w-24 sm:w-32 h-24 sm:h-32 object-cover rounded-full border-2 border-neonBlue"
+                loading="lazy"
               />
-              <h3 className="text-xl font-semibold">{member.name}</h3>
-              <p className="text-gray-300">{member.role}</p>
+              <h3 className="text-lg sm:text-xl font-semibold text-white">
+                {member.name}
+              </h3>
+              <p className="text-gray-300 text-sm sm:text-base">
+                {member.role}
+              </p>
             </motion.div>
           ))}
         </motion.div>
