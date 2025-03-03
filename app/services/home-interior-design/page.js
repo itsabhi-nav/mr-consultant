@@ -119,43 +119,51 @@ export default function HomeInteriorDesignPage() {
       </section>
 
       {/* ✅ TEXT SECTION (Left Aligned on Web, Centered on Mobile) */}
-      <section className="py-12 bg-gray-900 text-white min-h-[50vh] flex items-center">
+      <section className="py-6 md:py-10 bg-gray-900 text-white min-h-[35vh] md:min-h-[45vh] flex items-center">
         <div className="max-w-3xl mx-auto px-4 md:px-8 text-left">
-          <h2 className="text-3xl md:text-5xl font-bold mb-6 text-neonBlue">
+          <h2 className="text-2xl md:text-4xl font-bold mb-3 md:mb-5 text-neonBlue">
             Innovative Interior Solutions
           </h2>
-          <p className="text-lg text-gray-300 leading-relaxed mb-6">
+          <p className="text-sm md:text-lg text-gray-300 leading-snug md:leading-relaxed mb-3 md:mb-5">
             We merge modern aesthetics with advanced technology to create
             bespoke, luxurious interiors.
           </p>
-          <ul className="text-lg text-gray-300 space-y-4">
-            <li>
+          <ul className="text-sm md:text-lg text-gray-300 space-y-1.5 md:space-y-3">
+            <li className="flex items-start">
               ✅{" "}
-              <span className="font-semibold text-white">
-                Bespoke Design Concepts:
-              </span>{" "}
-              Custom solutions that epitomize elegance.
+              <span className="ml-2">
+                <span className="font-semibold text-white">
+                  Bespoke Design Concepts:
+                </span>{" "}
+                Custom solutions that epitomize elegance.
+              </span>
             </li>
-            <li>
+            <li className="flex items-start">
               ✅{" "}
-              <span className="font-semibold text-white">
-                Smart Home Integration:
-              </span>{" "}
-              Seamlessly blending technology with design.
+              <span className="ml-2">
+                <span className="font-semibold text-white">
+                  Smart Home Integration:
+                </span>{" "}
+                Seamlessly blending technology with design.
+              </span>
             </li>
-            <li>
+            <li className="flex items-start">
               ✅{" "}
-              <span className="font-semibold text-white">
-                Eco-Friendly Materials:
-              </span>{" "}
-              Sustainable choices without compromising luxury.
+              <span className="ml-2">
+                <span className="font-semibold text-white">
+                  Eco-Friendly Materials:
+                </span>{" "}
+                Sustainable choices without compromising luxury.
+              </span>
             </li>
-            <li>
+            <li className="flex items-start">
               ✅{" "}
-              <span className="font-semibold text-white">
-                Meticulous Craftsmanship:
-              </span>{" "}
-              Exquisite details that elevate every space.
+              <span className="ml-2">
+                <span className="font-semibold text-white">
+                  Meticulous Craftsmanship:
+                </span>{" "}
+                Exquisite details that elevate every space.
+              </span>
             </li>
           </ul>
         </div>

@@ -129,43 +129,51 @@ export default function BuildingConstructionPage() {
       </section>
 
       {/* ✅ TEXT SECTION (Left Aligned on Web, Centered on Mobile) */}
-      <section className="py-12 bg-gray-900 text-white min-h-[50vh] flex items-center">
+      <section className="py-6 md:py-10 bg-gray-900 text-white min-h-[35vh] md:min-h-[45vh] flex items-center">
         <div className="max-w-3xl mx-auto px-4 md:px-8 text-left">
-          <h2 className="text-3xl md:text-5xl font-bold mb-6 text-neonBlue">
+          <h2 className="text-2xl md:text-4xl font-bold mb-3 md:mb-5 text-neonBlue">
             Excellence in Construction
           </h2>
-          <p className="text-lg text-gray-300 leading-relaxed mb-6">
+          <p className="text-sm md:text-lg text-gray-300 leading-snug md:leading-relaxed mb-3 md:mb-5">
             We blend cutting-edge technology with sustainable practices to build
             robust, innovative structures.
           </p>
-          <ul className="text-lg text-gray-300 space-y-4">
-            <li>
+          <ul className="text-sm md:text-lg text-gray-300 space-y-1.5 md:space-y-3">
+            <li className="flex items-start">
               ✅{" "}
-              <span className="font-semibold text-white">
-                Revolutionary Engineering:
-              </span>{" "}
-              Pushing the boundaries of modern construction.
+              <span className="ml-2">
+                <span className="font-semibold text-white">
+                  Revolutionary Engineering:
+                </span>{" "}
+                Pushing the boundaries of modern construction.
+              </span>
             </li>
-            <li>
+            <li className="flex items-start">
               ✅{" "}
-              <span className="font-semibold text-white">
-                Sustainable Materials:
-              </span>{" "}
-              Committed to eco-friendly and durable solutions.
+              <span className="ml-2">
+                <span className="font-semibold text-white">
+                  Sustainable Materials:
+                </span>{" "}
+                Committed to eco-friendly and durable solutions.
+              </span>
             </li>
-            <li>
+            <li className="flex items-start">
               ✅{" "}
-              <span className="font-semibold text-white">
-                Precision in Every Build:
-              </span>{" "}
-              Uncompromising attention to detail.
+              <span className="ml-2">
+                <span className="font-semibold text-white">
+                  Precision in Every Build:
+                </span>{" "}
+                Uncompromising attention to detail.
+              </span>
             </li>
-            <li>
+            <li className="flex items-start">
               ✅{" "}
-              <span className="font-semibold text-white">
-                Award-Winning Designs:
-              </span>{" "}
-              Recognized for groundbreaking innovation.
+              <span className="ml-2">
+                <span className="font-semibold text-white">
+                  Award-Winning Designs:
+                </span>{" "}
+                Recognized for groundbreaking innovation.
+              </span>
             </li>
           </ul>
         </div>
@@ -173,12 +181,16 @@ export default function BuildingConstructionPage() {
 
       {/* ✅ PROJECT SECTIONS */}
       {Object.entries(projects).map(([key, projectList]) => (
-        <section key={key} id={`${key}-projects`} className="py-20 bg-gray-800">
+        <section
+          key={key}
+          id={`${key}-projects`}
+          className="py-12 md:py-16 bg-gray-800"
+        >
           <div className="max-w-6xl mx-auto px-6">
-            <h2 className="text-4xl font-bold text-center mb-12 capitalize">
+            <h2 className="text-3xl md:text-4xl font-bold text-center mb-6 md:mb-8 capitalize">
               {key} Projects
             </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
               {projectList.map((project) => (
                 <ProjectCard key={project.id} project={project} />
               ))}

@@ -9,12 +9,12 @@ export default function Header() {
   const [servicesOpen, setServicesOpen] = useState(false);
 
   return (
-    <header className="fixed top-0 left-0 w-full z-50 bg-black bg-opacity-60 backdrop-blur-lg shadow-md">
+    <header className="fixed top-0 left-0 w-full z-50 bg-black bg-opacity-70 backdrop-blur-lg shadow-lg">
       <div className="flex items-center justify-between py-4 px-6 sm:px-10">
         {/* 🔹 Brand Name */}
         <motion.div
           whileHover={{ scale: 1.1 }}
-          className="text-2xl font-extrabold text-neonBlue cursor-pointer"
+          className="text-2xl font-extrabold text-neonBlue cursor-pointer tracking-widest"
         >
           M R Consultants
         </motion.div>
@@ -24,9 +24,10 @@ export default function Header() {
           <button
             onClick={() => setNavOpen(!navOpen)}
             aria-label="Toggle navigation"
+            className="p-2 rounded-md focus:outline-none"
           >
-            <svg
-              className="w-7 h-7 text-white"
+            <motion.svg
+              className="w-8 h-8 text-white"
               fill="none"
               stroke="currentColor"
               strokeWidth="2"
@@ -49,13 +50,13 @@ export default function Header() {
                   animate={{ opacity: 1 }}
                 />
               )}
-            </svg>
+            </motion.svg>
           </button>
         </div>
 
         {/* 🔹 Desktop Navigation */}
         <nav className="hidden md:flex space-x-10">
-          <Link href="/" className="hover:text-neonBlue transition">
+          <Link href="/" className="hover:text-neonBlue transition font-medium">
             Home
           </Link>
 
@@ -65,9 +66,9 @@ export default function Header() {
             onMouseEnter={() => setServicesOpen(true)}
             onMouseLeave={() => setServicesOpen(false)}
           >
-            <button className="hover:text-neonBlue transition flex items-center">
+            <button className="hover:text-neonBlue transition flex items-center font-medium">
               Services
-              <svg
+              <motion.svg
                 className="ml-2 w-4 h-4 text-neonBlue"
                 fill="currentColor"
                 viewBox="0 0 20 20"
@@ -77,7 +78,7 @@ export default function Header() {
                   d="M10 12l-4-4h8l-4 4z"
                   clipRule="evenodd"
                 />
-              </svg>
+              </motion.svg>
             </button>
 
             <AnimatePresence>
@@ -86,29 +87,29 @@ export default function Header() {
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
-                  className="absolute left-0 mt-2 w-60 bg-black bg-opacity-80 backdrop-blur-md rounded-lg shadow-lg py-2"
+                  className="absolute left-0 mt-3 w-60 bg-black bg-opacity-90 backdrop-blur-md rounded-xl shadow-xl py-3"
                 >
                   <Link
                     href="/services/real-estate"
-                    className="block px-4 py-3 hover:bg-neonBlue transition rounded-lg"
+                    className="block px-6 py-3 hover:bg-neonBlue transition rounded-lg"
                   >
                     Real Estate
                   </Link>
                   <Link
                     href="/services/building-construction"
-                    className="block px-4 py-3 hover:bg-neonBlue transition rounded-lg"
+                    className="block px-6 py-3 hover:bg-neonBlue transition rounded-lg"
                   >
                     Building Construction
                   </Link>
                   <Link
                     href="/services/land-development"
-                    className="block px-4 py-3 hover:bg-neonBlue transition rounded-lg"
+                    className="block px-6 py-3 hover:bg-neonBlue transition rounded-lg"
                   >
                     Land Development
                   </Link>
                   <Link
                     href="/services/home-interior-design"
-                    className="block px-4 py-3 hover:bg-neonBlue transition rounded-lg"
+                    className="block px-6 py-3 hover:bg-neonBlue transition rounded-lg"
                   >
                     Home Interior Design
                   </Link>
@@ -117,10 +118,16 @@ export default function Header() {
             </AnimatePresence>
           </div>
 
-          <Link href="#about" className="hover:text-neonBlue transition">
+          <Link
+            href="#about"
+            className="hover:text-neonBlue transition font-medium"
+          >
             About
           </Link>
-          <Link href="#contact" className="hover:text-neonBlue transition">
+          <Link
+            href="#contact"
+            className="hover:text-neonBlue transition font-medium"
+          >
             Contact
           </Link>
         </nav>
@@ -133,12 +140,12 @@ export default function Header() {
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            className="md:hidden bg-black bg-opacity-80 backdrop-blur-md px-6 pb-4 rounded-b-lg"
+            className="md:hidden bg-black bg-opacity-90 backdrop-blur-md px-6 pb-6 rounded-b-lg"
           >
-            <nav className="flex flex-col space-y-5">
+            <nav className="flex flex-col space-y-6">
               <Link
                 href="/"
-                className="hover:text-neonBlue transition"
+                className="hover:text-neonBlue transition font-medium"
                 onClick={() => setNavOpen(false)}
               >
                 Home
@@ -151,7 +158,7 @@ export default function Header() {
                   onClick={() => setServicesOpen(!servicesOpen)}
                 >
                   Services
-                  <svg
+                  <motion.svg
                     className="ml-2 w-4 h-4 text-neonBlue"
                     fill="currentColor"
                     viewBox="0 0 20 20"
@@ -161,7 +168,7 @@ export default function Header() {
                       d="M10 12l-4-4h8l-4 4z"
                       clipRule="evenodd"
                     />
-                  </svg>
+                  </motion.svg>
                 </button>
 
                 <AnimatePresence>
@@ -170,7 +177,7 @@ export default function Header() {
                       initial={{ opacity: 0, height: 0 }}
                       animate={{ opacity: 1, height: "auto" }}
                       exit={{ opacity: 0, height: 0 }}
-                      className="mt-2 pl-4 space-y-3"
+                      className="mt-3 pl-6 space-y-3"
                     >
                       <Link
                         href="/services/real-estate"
@@ -207,14 +214,14 @@ export default function Header() {
 
               <Link
                 href="#about"
-                className="hover:text-neonBlue transition"
+                className="hover:text-neonBlue transition font-medium"
                 onClick={() => setNavOpen(false)}
               >
                 About
               </Link>
               <Link
                 href="#contact"
-                className="hover:text-neonBlue transition"
+                className="hover:text-neonBlue transition font-medium"
                 onClick={() => setNavOpen(false)}
               >
                 Contact

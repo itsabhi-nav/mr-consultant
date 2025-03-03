@@ -124,43 +124,51 @@ export default function LandDevelopmentPage() {
       </section>
 
       {/* ✅ TEXT SECTION (Left Aligned on Web, Centered on Mobile) */}
-      <section className="py-12 bg-gray-900 text-white min-h-[50vh] flex items-center">
+      <section className="py-6 md:py-10 bg-gray-900 text-white min-h-[35vh] md:min-h-[45vh] flex items-center">
         <div className="max-w-3xl mx-auto px-4 md:px-8 text-left">
-          <h2 className="text-3xl md:text-5xl font-bold mb-6 text-neonBlue">
+          <h2 className="text-2xl md:text-4xl font-bold mb-3 md:mb-5 text-neonBlue">
             Innovative Land Development
           </h2>
-          <p className="text-lg text-gray-300 leading-relaxed mb-6">
+          <p className="text-sm md:text-lg text-gray-300 leading-snug md:leading-relaxed mb-3 md:mb-5">
             We transform raw land into dynamic, sustainable communities by
             blending visionary planning with environmental stewardship.
           </p>
-          <ul className="text-lg text-gray-300 space-y-4">
-            <li>
+          <ul className="text-sm md:text-lg text-gray-300 space-y-1.5 md:space-y-3">
+            <li className="flex items-start">
               ✅{" "}
-              <span className="font-semibold text-white">
-                Strategic Master Planning:
-              </span>{" "}
-              Thoughtful designs to maximize land potential.
+              <span className="ml-2">
+                <span className="font-semibold text-white">
+                  Strategic Master Planning:
+                </span>{" "}
+                Thoughtful designs to maximize land potential.
+              </span>
             </li>
-            <li>
+            <li className="flex items-start">
               ✅{" "}
-              <span className="font-semibold text-white">
-                Eco-Friendly Infrastructure:
-              </span>{" "}
-              Building foundations for a sustainable future.
+              <span className="ml-2">
+                <span className="font-semibold text-white">
+                  Eco-Friendly Infrastructure:
+                </span>{" "}
+                Building foundations for a sustainable future.
+              </span>
             </li>
-            <li>
+            <li className="flex items-start">
               ✅{" "}
-              <span className="font-semibold text-white">
-                Community-Centric Design:
-              </span>{" "}
-              Creating spaces that foster connectivity and growth.
+              <span className="ml-2">
+                <span className="font-semibold text-white">
+                  Community-Centric Design:
+                </span>{" "}
+                Creating spaces that foster connectivity and growth.
+              </span>
             </li>
-            <li>
+            <li className="flex items-start">
               ✅{" "}
-              <span className="font-semibold text-white">
-                Innovative Land Utilization:
-              </span>{" "}
-              Modern methods that redefine property development.
+              <span className="ml-2">
+                <span className="font-semibold text-white">
+                  Innovative Land Utilization:
+                </span>{" "}
+                Modern methods that redefine property development.
+              </span>
             </li>
           </ul>
         </div>
