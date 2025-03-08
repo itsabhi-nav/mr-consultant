@@ -1,4 +1,3 @@
-// app/api/upload/route.js
 import { v2 as cloudinary } from "cloudinary";
 
 cloudinary.config({
@@ -15,20 +14,29 @@ export async function POST(req) {
       return new Response("No file uploaded", { status: 400 });
     }
 
-    // Convert the file to a base64 string
+    // Convert file to base64 string
     const buffer = await file.arrayBuffer();
     const base64data = Buffer.from(buffer).toString("base64");
     const fileData = `data:${file.type};base64,${base64data}`;
 
-    // Upload the file to Cloudinary, using a folder for organization (e.g. "projects")
+    // Upload the file to Cloudinary with auto compression transformation
     const result = await cloudinary.uploader.upload(fileData, {
       folder: "projects",
+      transformation: [
+        {
+          quality: "auto:good", // Auto compress with good quality
+          fetch_format: "auto", // Convert to an optimal format (e.g., WebP)
+        },
+      ],
     });
 
-    return new Response(JSON.stringify({ url: result.secure_url }), {
-      status: 200,
-      headers: { "Content-Type": "application/json" },
-    });
+    return new Response(
+      JSON.stringify({ url: result.secure_url, public_id: result.public_id }),
+      {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      }
+    );
   } catch (error) {
     console.error("Error uploading file to Cloudinary:", error);
     return new Response("Upload failed", { status: 500 });

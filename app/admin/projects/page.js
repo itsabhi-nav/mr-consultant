@@ -1,12 +1,16 @@
 "use client";
-
 import React, { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
 import { supabase } from "../../lib/supabaseClient";
 
+const SERVICES = [
+  { label: "Real Estate", value: "real-estate" },
+  { label: "Building Construction", value: "building-construction" },
+  { label: "Land Development", value: "land-development" },
+  { label: "Home Interior Design", value: "home-interior-design" },
+];
+
 export default function AdminProjectsPage() {
-  const searchParams = useSearchParams();
-  const service = searchParams.get("service") || "real-estate";
+  const [service, setService] = useState("real-estate");
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [form, setForm] = useState({
@@ -25,6 +29,7 @@ export default function AdminProjectsPage() {
   }, [service]);
 
   async function fetchProjects() {
+    setLoading(true);
     const { data, error } = await supabase
       .from("projects")
       .select("*")
@@ -39,7 +44,6 @@ export default function AdminProjectsPage() {
     setForm((prev) => ({ ...prev, [name]: value }));
   }
 
-  // Upload file to Cloudinary via API route
   async function uploadFileToCloudinary(file) {
     const formData = new FormData();
     formData.append("file", file);
@@ -64,11 +68,13 @@ export default function AdminProjectsPage() {
     }
     let galleryUrls = [];
     for (let gf of galleryFiles) {
-      try {
-        const url = await uploadFileToCloudinary(gf);
-        galleryUrls.push(url);
-      } catch (error) {
-        console.error("Gallery image upload failed:", error);
+      if (gf) {
+        try {
+          const url = await uploadFileToCloudinary(gf);
+          galleryUrls.push(url);
+        } catch (error) {
+          console.error("Gallery image upload failed:", error);
+        }
       }
     }
     const newProject = {
@@ -106,8 +112,24 @@ export default function AdminProjectsPage() {
       <h1 className="text-3xl font-bold mb-6">
         Edit {service.replace(/-/g, " ")} Projects
       </h1>
+
+      {/* Service selector */}
+      <div className="mb-6">
+        <label className="block mb-2 font-semibold">Select Service</label>
+        <select
+          value={service}
+          onChange={(e) => setService(e.target.value)}
+          className="p-2 rounded bg-gray-800"
+        >
+          {SERVICES.map((s) => (
+            <option key={s.value} value={s.value}>
+              {s.label}
+            </option>
+          ))}
+        </select>
+      </div>
+
       <form onSubmit={handleSubmit} className="mb-8">
-        {/* Input fields for project details */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <input
             type="text"
@@ -194,7 +216,6 @@ export default function AdminProjectsPage() {
             {projects.map((project) => (
               <li key={project.id} className="mb-2">
                 <strong>{project.title}</strong> - {project.category}
-                {/* You can add edit/delete functionality here */}
               </li>
             ))}
           </ul>

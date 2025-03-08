@@ -1,9 +1,7 @@
-// app/page.js
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { supabase } from "@/lib/supabaseClient";
-
+import { supabase } from "../../lib/supabaseClient";
 import { motion } from "framer-motion";
 import Link from "next/link";
 
@@ -11,24 +9,37 @@ function ProjectCard({ project }) {
   return (
     <motion.div
       whileHover={{ scale: 1.05 }}
-      className="bg-gray-900 rounded-lg overflow-hidden shadow-xl hover:shadow-neonBlue transition duration-300"
+      className="bg-gray-900 rounded-lg overflow-hidden shadow-xl hover:shadow-neonBlue transition duration-300 flex flex-col min-h-[32rem]"
     >
-      <img
-        src={project.image}
-        alt={project.title}
-        className="w-full h-56 object-cover rounded-t-lg"
-      />
-      <div className="p-6">
+      {/* Fixed-height container for the image */}
+      <div className="w-full h-56 flex items-center justify-center bg-black">
+        <img
+          src={project.image}
+          alt={project.title}
+          className="max-w-full max-h-full object-contain"
+        />
+      </div>
+
+      {/* Text + Button container */}
+      <div className="p-6 flex flex-col flex-grow">
         <h3 className="text-2xl font-semibold mb-2 text-neonBlue">
           {project.title}
         </h3>
-        <p className="text-gray-300 mb-4">{project.description}</p>
-        <Link
-          href={`/project/${project.id}`}
-          className="inline-block px-6 py-2 bg-neonBlue text-black font-semibold rounded-full hover:scale-105 transition"
-        >
-          Learn More
-        </Link>
+
+        {/* Limit description but allow full text accessibility */}
+        <p className="text-gray-300 mb-4 flex-grow line-clamp-3 overflow-hidden relative after:absolute after:bottom-0 after:right-0 after:w-full after:h-6 after:bg-gradient-to-t after:from-gray-900 after:to-transparent">
+          {project.description}
+        </p>
+
+        {/* Centered, improved button with balanced gradient */}
+        <div className="mt-auto flex justify-center">
+          <Link
+            href={`/project/${project.id}`}
+            className="px-4 py-1.5 bg-gradient-to-r from-pink-400 via-pink-500 to-blue-500 text-black font-semibold rounded-full hover:scale-105 transition shadow-lg shadow-pink-400/50 text-sm"
+          >
+            Learn More
+          </Link>
+        </div>
       </div>
     </motion.div>
   );
@@ -38,11 +49,15 @@ export default function RealEstatePage() {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // Fetch projects for service = real-estate
   useEffect(() => {
     async function fetchProjects() {
-      const { data, error } = await supabase.from("projects").select("*");
+      const { data, error } = await supabase
+        .from("projects")
+        .select("*")
+        .eq("service", "real-estate");
       if (error) {
-        console.error("Error fetching projects: ", error);
+        console.error("Error fetching projects:", error);
       } else {
         setProjects(data);
       }
