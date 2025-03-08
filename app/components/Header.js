@@ -125,7 +125,7 @@ export default function Header() {
             About
           </Link>
           <Link
-            href="#contact"
+            href="/contact"
             className="hover:text-neonBlue transition font-medium"
           >
             Contact

@@ -1,4 +1,3 @@
-// app/page.js
 import HeroSection from "./components/HeroSection";
 import Services from "./components/Services";
 import StatsSection from "./components/StatsSection";
@@ -6,12 +5,13 @@ import ProcessSection from "./components/ProcessSection";
 import ParallaxCTA from "./components/ParallaxCTA";
 import TeamSection from "./components/TeamSection";
 import PortfolioSection from "./components/PortfolioSection";
-import GallerySection from "./components/GallerySection"; // <-- New import
+import GallerySection from "./components/GallerySection";
 import TestimonialsSection from "./components/TestimonialsSection";
 import FAQSection from "./components/FAQSection";
 import VideoSection from "./components/VideoSection";
 import ContactForm from "./components/ContactForm";
 import ScrollToTopButton from "./components/ScrollToTopButton";
+import WhatsAppButton from "./components/WhatsAppButton"; // Import WhatsApp Button
 
 export default function HomePage() {
   return (
@@ -23,12 +23,12 @@ export default function HomePage() {
       <ParallaxCTA />
       <TeamSection />
       <PortfolioSection />
-      <GallerySection /> {/* <-- Render the new GallerySection here */}
+      <GallerySection />
       <TestimonialsSection />
       <FAQSection />
       <VideoSection />
-      <ContactForm />
       <ScrollToTopButton />
+      <WhatsAppButton /> {/* Add WhatsApp Button Here */}
     </main>
   );
 }
