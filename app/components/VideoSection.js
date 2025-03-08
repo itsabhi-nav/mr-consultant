@@ -21,7 +21,7 @@ export default function VideoSection() {
           landmarks.
         </p>
         <a
-          href="#contact"
+          href="/contact"
           className="inline-block px-8 py-4 bg-neonBlue text-black font-semibold rounded-full hover:scale-105 transition"
         >
           Contact Us

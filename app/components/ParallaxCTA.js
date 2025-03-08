@@ -18,7 +18,7 @@ export default function ParallaxCTA() {
           projects.
         </p>
         <a
-          href="#contact"
+          href="/contact"
           className="px-8 py-4 bg-neonBlue text-black font-semibold rounded-full hover:scale-105 transition"
         >
           Get in Touch
