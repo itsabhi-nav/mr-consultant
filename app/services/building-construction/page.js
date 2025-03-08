@@ -1,7 +1,9 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { supabase } from "../../lib/supabaseClient";
 import { motion } from "framer-motion";
+import Link from "next/link";
 
 function ProjectCard({ project }) {
   return (
@@ -19,77 +21,54 @@ function ProjectCard({ project }) {
           {project.title}
         </h3>
         <p className="text-gray-300 mb-4">{project.description}</p>
-        <a
-          href="/project-details"
+        <Link
+          href={`/project/${project.service}/${project.id}`}
           className="inline-block px-6 py-2 bg-neonBlue text-black font-semibold rounded-full hover:scale-105 transition"
         >
           Learn More
-        </a>
+        </Link>
       </div>
     </motion.div>
   );
 }
 
 export default function BuildingConstructionPage() {
-  const projects = {
-    current: [
-      {
-        id: 1,
-        title: "Modern Office Complex",
-        description: "Innovative workspace solutions with a futuristic edge.",
-        image:
-          "https://via.placeholder.com/600x400?text=Current+Construction+1",
-      },
-      {
-        id: 2,
-        title: "Luxury Residential Tower",
-        description: "High-tech design combined with luxurious living.",
-        image:
-          "https://via.placeholder.com/600x400?text=Current+Construction+2",
-      },
-    ],
-    completed: [
-      {
-        id: 3,
-        title: "City Center Mall",
-        description: "A transformative project revitalizing urban commerce.",
-        image:
-          "https://via.placeholder.com/600x400?text=Completed+Construction+1",
-      },
-      {
-        id: 4,
-        title: "High-Rise Apartments",
-        description:
-          "Residential towers that set new standards in modern construction.",
-        image:
-          "https://via.placeholder.com/600x400?text=Completed+Construction+2",
-      },
-    ],
-    upcoming: [
-      {
-        id: 5,
-        title: "Futuristic Business Park",
-        description: "Redefining corporate workspaces with innovative design.",
-        image:
-          "https://via.placeholder.com/600x400?text=Upcoming+Construction+1",
-      },
-      {
-        id: 6,
-        title: "Next-Gen Convention Center",
-        description: "A state-of-the-art venue designed for future events.",
-        image:
-          "https://via.placeholder.com/600x400?text=Upcoming+Construction+2",
-      },
-    ],
-  };
+  const [projects, setProjects] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch projects for service = building-construction
+  useEffect(() => {
+    async function fetchProjects() {
+      const { data, error } = await supabase
+        .from("projects")
+        .select("*")
+        .eq("service", "building-construction");
+      if (error) {
+        console.error("Error fetching projects:", error);
+      } else {
+        setProjects(data);
+      }
+      setLoading(false);
+    }
+    fetchProjects();
+  }, []);
+
+  // Group projects by category (current, completed, upcoming)
+  const groupedProjects = projects.reduce((acc, project) => {
+    const category = project.category || "others";
+    if (!acc[category]) {
+      acc[category] = [];
+    }
+    acc[category].push(project);
+    return acc;
+  }, {});
+
+  if (loading) return <div>Loading...</div>;
 
   return (
     <div className="min-h-screen bg-gray-900 text-white">
-      {/* ✅ HERO SECTION with Background Video */}
-      <section
-        className="relative flex items-center justify-center bg-fixed bg-center bg-cover px-4
-             min-h-[50vh] md:min-h-[50vh] mt-12 overflow-hidden"
-      >
+      {/* HERO SECTION with Background Video */}
+      <section className="relative flex items-center justify-center bg-fixed bg-center bg-cover px-4 min-h-[50vh] mt-12 overflow-hidden">
         <video
           className="absolute top-0 left-0 w-full h-full object-cover"
           src="/build_video.mp4" // Replace with your actual video file
@@ -99,7 +78,6 @@ export default function BuildingConstructionPage() {
           playsInline
         />
         <div className="absolute inset-0 bg-black opacity-65"></div>
-
         <div className="relative z-10 text-center w-full max-w-3xl mx-auto px-4">
           <motion.h1
             initial={{ opacity: 0, y: -20 }}
@@ -128,7 +106,7 @@ export default function BuildingConstructionPage() {
         </div>
       </section>
 
-      {/* ✅ TEXT SECTION (Left Aligned on Web, Centered on Mobile) */}
+      {/* TEXT SECTION */}
       <section className="py-6 md:py-10 bg-gray-900 text-white min-h-[35vh] md:min-h-[45vh] flex items-center">
         <div className="max-w-3xl mx-auto px-4 md:px-8 text-left">
           <h2 className="text-2xl md:text-4xl font-bold mb-3 md:mb-5 text-neonBlue">
@@ -141,46 +119,38 @@ export default function BuildingConstructionPage() {
           <ul className="text-sm md:text-lg text-gray-300 space-y-1.5 md:space-y-3">
             <li className="flex items-start">
               ✅{" "}
-              <span className="ml-2">
-                <span className="font-semibold text-white">
-                  Revolutionary Engineering:
-                </span>{" "}
-                Pushing the boundaries of modern construction.
-              </span>
+              <span className="ml-2 font-semibold text-white">
+                Revolutionary Engineering:
+              </span>{" "}
+              Pushing the boundaries of modern construction.
             </li>
             <li className="flex items-start">
               ✅{" "}
-              <span className="ml-2">
-                <span className="font-semibold text-white">
-                  Sustainable Materials:
-                </span>{" "}
-                Committed to eco-friendly and durable solutions.
-              </span>
+              <span className="ml-2 font-semibold text-white">
+                Sustainable Materials:
+              </span>{" "}
+              Committed to eco-friendly and durable solutions.
             </li>
             <li className="flex items-start">
               ✅{" "}
-              <span className="ml-2">
-                <span className="font-semibold text-white">
-                  Precision in Every Build:
-                </span>{" "}
-                Uncompromising attention to detail.
-              </span>
+              <span className="ml-2 font-semibold text-white">
+                Precision in Every Build:
+              </span>{" "}
+              Uncompromising attention to detail.
             </li>
             <li className="flex items-start">
               ✅{" "}
-              <span className="ml-2">
-                <span className="font-semibold text-white">
-                  Award-Winning Designs:
-                </span>{" "}
-                Recognized for groundbreaking innovation.
-              </span>
+              <span className="ml-2 font-semibold text-white">
+                Award-Winning Designs:
+              </span>{" "}
+              Recognized for groundbreaking innovation.
             </li>
           </ul>
         </div>
       </section>
 
-      {/* ✅ PROJECT SECTIONS */}
-      {Object.entries(projects).map(([key, projectList]) => (
+      {/* PROJECT SECTIONS */}
+      {Object.entries(groupedProjects).map(([key, projectList]) => (
         <section
           key={key}
           id={`${key}-projects`}
@@ -199,7 +169,7 @@ export default function BuildingConstructionPage() {
         </section>
       ))}
 
-      {/* ✅ CALL-TO-ACTION SECTION WITH Background Video */}
+      {/* CALL-TO-ACTION SECTION */}
       <section className="relative flex items-center justify-center bg-fixed bg-center bg-cover px-4 min-h-[50vh] md:min-h-[50vh] overflow-hidden">
         <video
           className="absolute top-0 left-0 w-full h-full object-cover"
@@ -210,7 +180,6 @@ export default function BuildingConstructionPage() {
           playsInline
         />
         <div className="absolute inset-0 bg-black opacity-60"></div>
-
         <div className="relative z-10 text-center w-full max-w-3xl mx-auto px-4">
           <motion.h2
             initial={{ opacity: 0, y: -20 }}

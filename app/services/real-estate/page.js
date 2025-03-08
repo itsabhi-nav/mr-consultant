@@ -1,7 +1,11 @@
+// app/page.js
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { supabase } from "@/lib/supabaseClient";
+
 import { motion } from "framer-motion";
+import Link from "next/link";
 
 function ProjectCard({ project }) {
   return (
@@ -19,88 +23,61 @@ function ProjectCard({ project }) {
           {project.title}
         </h3>
         <p className="text-gray-300 mb-4">{project.description}</p>
-        <a
-          href="/project-details"
+        <Link
+          href={`/project/${project.id}`}
           className="inline-block px-6 py-2 bg-neonBlue text-black font-semibold rounded-full hover:scale-105 transition"
         >
           Learn More
-        </a>
+        </Link>
       </div>
     </motion.div>
   );
 }
 
 export default function RealEstatePage() {
-  const projects = {
-    current: [
-      {
-        id: 1,
-        title: "Skyline Residences",
-        description: "Modern residential towers redefining urban luxury.",
-        image: "https://via.placeholder.com/600x400?text=Current+Real+Estate+1",
-      },
-      {
-        id: 2,
-        title: "Urban Oasis",
-        description: "Luxury condos with panoramic city views.",
-        image: "https://via.placeholder.com/600x400?text=Current+Real+Estate+2",
-      },
-    ],
-    completed: [
-      {
-        id: 3,
-        title: "Heritage Villa",
-        description:
-          "A timeless villa blending tradition with modern innovation.",
-        image:
-          "https://via.placeholder.com/600x400?text=Completed+Real+Estate+1",
-      },
-      {
-        id: 4,
-        title: "Global Towers",
-        description: "Iconic skyscrapers that set new global benchmarks.",
-        image:
-          "https://via.placeholder.com/600x400?text=Completed+Real+Estate+2",
-      },
-    ],
-    upcoming: [
-      {
-        id: 5,
-        title: "Futuristic Habitat",
-        description: "A visionary project promising next-generation living.",
-        image:
-          "https://via.placeholder.com/600x400?text=Upcoming+Real+Estate+1",
-      },
-      {
-        id: 6,
-        title: "Eco Smart Living",
-        description: "Sustainable design meeting modern aesthetics.",
-        image:
-          "https://via.placeholder.com/600x400?text=Upcoming+Real+Estate+2",
-      },
-    ],
-  };
+  const [projects, setProjects] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchProjects() {
+      const { data, error } = await supabase.from("projects").select("*");
+      if (error) {
+        console.error("Error fetching projects: ", error);
+      } else {
+        setProjects(data);
+      }
+      setLoading(false);
+    }
+    fetchProjects();
+  }, []);
+
+  // Group projects by category
+  const groupedProjects = projects.reduce((acc, project) => {
+    const category = project.category || "others";
+    if (!acc[category]) {
+      acc[category] = [];
+    }
+    acc[category].push(project);
+    return acc;
+  }, {});
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="min-h-screen bg-gray-900 text-white">
       {/* HERO SECTION */}
-      <section
-        className="relative flex items-center justify-center bg-fixed bg-center bg-cover px-4
-             min-h-[50vh] md:min-h-[50vh] mt-12 overflow-hidden" // ✅ 1/2 screen height for both mobile & web
-      >
-        {/* ✅ Background Video */}
+      <section className="relative flex items-center justify-center bg-fixed bg-center bg-cover px-4 min-h-[50vh] mt-12 overflow-hidden">
         <video
           className="absolute top-0 left-0 w-full h-full object-cover"
-          src="/real_estate.mp4" // Replace with your actual video file
+          src="/real_estate.mp4"
           autoPlay
           muted
           loop
           playsInline
         />
-
-        {/* Dark Overlay for Readability */}
         <div className="absolute inset-0 bg-black opacity-60"></div>
-
         <div className="relative z-10 text-center w-full max-w-3xl mx-auto px-4">
           <motion.h1
             initial={{ opacity: 0, y: -20 }}
@@ -120,7 +97,7 @@ export default function RealEstatePage() {
           </motion.p>
           <motion.a
             whileHover={{ scale: 1.1 }}
-            href="#current-projects"
+            href="#current"
             className="px-6 py-2 md:px-8 md:py-4 bg-neonBlue text-black font-semibold rounded-full transition"
           >
             Explore Our Portfolio
@@ -128,7 +105,7 @@ export default function RealEstatePage() {
         </div>
       </section>
 
-      {/* ✅ FIXED TEXT SECTION BELOW (1/2 screen height) */}
+      {/* FIXED TEXT SECTION */}
       <section className="py-6 md:py-10 bg-gray-900 text-white min-h-[35vh] md:min-h-[45vh] flex items-center">
         <div className="max-w-3xl mx-auto px-4 md:px-8 text-left">
           <h2 className="text-2xl md:text-4xl font-bold mb-3 md:mb-5 text-neonBlue">
@@ -182,11 +159,11 @@ export default function RealEstatePage() {
       </section>
 
       {/* PROJECT SECTIONS */}
-      {Object.entries(projects).map(([key, projectList]) => (
-        <section key={key} id={`${key}-projects`} className="py-20 bg-gray-800">
+      {Object.entries(groupedProjects).map(([category, projectList]) => (
+        <section key={category} id={category} className="py-20 bg-gray-800">
           <div className="max-w-6xl mx-auto px-6">
             <h2 className="text-4xl font-bold text-center mb-12 capitalize">
-              {key} Projects
+              {category} Projects
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
               {projectList.map((project) => (
@@ -197,22 +174,17 @@ export default function RealEstatePage() {
         </section>
       ))}
 
-      {/* ✅ CALL-TO-ACTION SECTION WITH BACKGROUND VIDEO */}
+      {/* CALL-TO-ACTION SECTION */}
       <section className="relative flex items-center justify-center bg-fixed bg-center bg-cover px-4 min-h-[50vh] md:min-h-[50vh] overflow-hidden">
-        {/* ✅ Background Video */}
         <video
           className="absolute top-0 left-0 w-full h-full object-cover"
-          src="/buildd.mp4" // Replace with your actual video file
+          src="/buildd.mp4"
           autoPlay
           muted
           loop
           playsInline
         />
-
-        {/* Dark Overlay for Readability */}
         <div className="absolute inset-0 bg-black opacity-60"></div>
-
-        {/* ✅ CTA Content */}
         <div className="relative z-10 text-center w-full max-w-3xl mx-auto px-4">
           <motion.h2
             initial={{ opacity: 0, y: -20 }}

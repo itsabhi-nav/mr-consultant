@@ -130,6 +130,14 @@ export default function Header() {
           >
             Contact
           </Link>
+
+          {/* 🔹 Admin Login Button */}
+          <Link
+            href="/admin/login"
+            className="hover:text-neonBlue transition font-medium border border-neonBlue px-3 py-1 rounded"
+          >
+            Admin Login
+          </Link>
         </nav>
       </div>
 
@@ -225,6 +233,15 @@ export default function Header() {
                 onClick={() => setNavOpen(false)}
               >
                 Contact
+              </Link>
+
+              {/* 🔹 Admin Login for Mobile */}
+              <Link
+                href="/admin/login"
+                className="hover:text-neonBlue transition font-medium border border-neonBlue px-3 py-1 rounded"
+                onClick={() => setNavOpen(false)}
+              >
+                Admin Login
               </Link>
             </nav>
           </motion.div>

@@ -1,7 +1,9 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { supabase } from "../../lib/supabaseClient";
 import { motion } from "framer-motion";
+import Link from "next/link";
 
 function ProjectCard({ project }) {
   return (
@@ -19,67 +21,47 @@ function ProjectCard({ project }) {
           {project.title}
         </h3>
         <p className="text-gray-300 mb-4">{project.description}</p>
-        <a
-          href="/project-details"
+        <Link
+          href={`/project/${project.service}/${project.id}`}
           className="inline-block px-6 py-2 bg-neonBlue text-black font-semibold rounded-full hover:scale-105 transition"
         >
           Learn More
-        </a>
+        </Link>
       </div>
     </motion.div>
   );
 }
 
 export default function HomeInteriorDesignPage() {
-  const projects = {
-    current: [
-      {
-        id: 1,
-        title: "Contemporary Living Room",
-        description: "A sleek, modern design with futuristic accents.",
-        image: "https://via.placeholder.com/600x400?text=Current+Interior+1",
-      },
-      {
-        id: 2,
-        title: "Minimalist Kitchen",
-        description: "Smart design merging functionality with style.",
-        image: "https://via.placeholder.com/600x400?text=Current+Interior+2",
-      },
-    ],
-    completed: [
-      {
-        id: 3,
-        title: "Luxury Bedroom Suite",
-        description: "A luxurious design showcasing elegance and innovation.",
-        image: "https://via.placeholder.com/600x400?text=Completed+Interior+1",
-      },
-      {
-        id: 4,
-        title: "Modern Office Interior",
-        description: "A corporate space designed with cutting-edge aesthetics.",
-        image: "https://via.placeholder.com/600x400?text=Completed+Interior+2",
-      },
-    ],
-    upcoming: [
-      {
-        id: 5,
-        title: "Futuristic Home Office",
-        description:
-          "A concept integrating smart technology with modern style.",
-        image: "https://via.placeholder.com/600x400?text=Upcoming+Interior+1",
-      },
-      {
-        id: 6,
-        title: "Innovative Living Space",
-        description: "A visionary design concept for next-generation living.",
-        image: "https://via.placeholder.com/600x400?text=Upcoming+Interior+2",
-      },
-    ],
-  };
+  const [projects, setProjects] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch projects for service = home-interior-design
+  useEffect(() => {
+    async function fetchProjects() {
+      const { data, error } = await supabase
+        .from("projects")
+        .select("*")
+        .eq("service", "home-interior-design");
+      if (error) console.error("Error fetching projects:", error);
+      else setProjects(data);
+      setLoading(false);
+    }
+    fetchProjects();
+  }, []);
+
+  const groupedProjects = projects.reduce((acc, project) => {
+    const category = project.category || "others";
+    if (!acc[category]) acc[category] = [];
+    acc[category].push(project);
+    return acc;
+  }, {});
+
+  if (loading) return <div>Loading...</div>;
 
   return (
     <div className="min-h-screen bg-gray-900 text-white">
-      {/* ✅ HERO SECTION with Background Video */}
+      {/* HERO SECTION with Background Video */}
       <section className="relative flex items-center justify-center bg-fixed bg-center bg-cover px-4 min-h-[50vh] md:min-h-[50vh] mt-12 overflow-hidden">
         <video
           className="absolute top-0 left-0 w-full h-full object-cover"
@@ -90,7 +72,6 @@ export default function HomeInteriorDesignPage() {
           playsInline
         />
         <div className="absolute inset-0 bg-black opacity-65"></div>
-
         <div className="relative z-10 text-center w-full max-w-3xl mx-auto px-4">
           <motion.h1
             initial={{ opacity: 0, y: -20 }}
@@ -118,7 +99,7 @@ export default function HomeInteriorDesignPage() {
         </div>
       </section>
 
-      {/* ✅ TEXT SECTION (Left Aligned on Web, Centered on Mobile) */}
+      {/* TEXT SECTION */}
       <section className="py-6 md:py-10 bg-gray-900 text-white min-h-[35vh] md:min-h-[45vh] flex items-center">
         <div className="max-w-3xl mx-auto px-4 md:px-8 text-left">
           <h2 className="text-2xl md:text-4xl font-bold mb-3 md:mb-5 text-neonBlue">
@@ -131,46 +112,38 @@ export default function HomeInteriorDesignPage() {
           <ul className="text-sm md:text-lg text-gray-300 space-y-1.5 md:space-y-3">
             <li className="flex items-start">
               ✅{" "}
-              <span className="ml-2">
-                <span className="font-semibold text-white">
-                  Bespoke Design Concepts:
-                </span>{" "}
-                Custom solutions that epitomize elegance.
-              </span>
+              <span className="ml-2 font-semibold text-white">
+                Bespoke Design Concepts:
+              </span>{" "}
+              Custom solutions that epitomize elegance.
             </li>
             <li className="flex items-start">
               ✅{" "}
-              <span className="ml-2">
-                <span className="font-semibold text-white">
-                  Smart Home Integration:
-                </span>{" "}
-                Seamlessly blending technology with design.
-              </span>
+              <span className="ml-2 font-semibold text-white">
+                Smart Home Integration:
+              </span>{" "}
+              Seamlessly blending technology with design.
             </li>
             <li className="flex items-start">
               ✅{" "}
-              <span className="ml-2">
-                <span className="font-semibold text-white">
-                  Eco-Friendly Materials:
-                </span>{" "}
-                Sustainable choices without compromising luxury.
-              </span>
+              <span className="ml-2 font-semibold text-white">
+                Eco-Friendly Materials:
+              </span>{" "}
+              Sustainable choices without compromising luxury.
             </li>
             <li className="flex items-start">
               ✅{" "}
-              <span className="ml-2">
-                <span className="font-semibold text-white">
-                  Meticulous Craftsmanship:
-                </span>{" "}
-                Exquisite details that elevate every space.
-              </span>
+              <span className="ml-2 font-semibold text-white">
+                Meticulous Craftsmanship:
+              </span>{" "}
+              Exquisite details that elevate every space.
             </li>
           </ul>
         </div>
       </section>
 
-      {/* ✅ PROJECT SECTIONS */}
-      {Object.entries(projects).map(([key, projectList]) => (
+      {/* PROJECT SECTIONS */}
+      {Object.entries(groupedProjects).map(([key, projectList]) => (
         <section key={key} id={`${key}-projects`} className="py-20 bg-gray-800">
           <div className="max-w-6xl mx-auto px-6">
             <h2 className="text-4xl font-bold text-center mb-12 capitalize">
@@ -185,7 +158,7 @@ export default function HomeInteriorDesignPage() {
         </section>
       ))}
 
-      {/* ✅ CALL-TO-ACTION SECTION WITH Background Video */}
+      {/* CALL-TO-ACTION SECTION */}
       <section className="relative flex items-center justify-center bg-fixed bg-center bg-cover px-4 min-h-[50vh] md:min-h-[50vh] overflow-hidden">
         <video
           className="absolute top-0 left-0 w-full h-full object-cover"
@@ -196,7 +169,6 @@ export default function HomeInteriorDesignPage() {
           playsInline
         />
         <div className="absolute inset-0 bg-black opacity-60"></div>
-
         <div className="relative z-10 text-center w-full max-w-3xl mx-auto px-4">
           <motion.h2
             initial={{ opacity: 0, y: -20 }}

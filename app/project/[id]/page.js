@@ -1,19 +1,50 @@
-// app/project-details/page.js
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
+import { supabase } from "../../lib/supabaseClient";
 
 export default function ProjectDetailsPage() {
+  const { id } = useParams();
+  const [project, setProject] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchProject() {
+      const { data, error } = await supabase
+        .from("projects")
+        .select("*")
+        .eq("id", id)
+        .single();
+      if (error) console.error("Error fetching project:", error);
+      else setProject(data);
+      setLoading(false);
+    }
+    fetchProject();
+  }, [id]);
+
+  if (loading) return <div>Loading...</div>;
+  if (!project) return <div>Project not found.</div>;
+
+  // Split key_features into an array (if available)
+  const keyFeatures = project.key_features
+    ? project.key_features.split("\n")
+    : [];
+
   return (
     <div className="min-h-screen bg-gray-900 text-white">
       {/* HERO SECTION */}
       <section
         className="relative min-h-screen flex items-center justify-center bg-fixed bg-center bg-cover"
-        style={{ backgroundImage: "url('/assets/project-hero.jpg')" }}
+        style={{
+          backgroundImage: `url(${
+            project.hero_image || "/assets/project-hero.jpg"
+          })`,
+        }}
       >
         <div className="absolute inset-0 bg-black opacity-70"></div>
         <div className="relative z-10 text-center px-4">
           <h1 className="text-5xl md:text-7xl font-extrabold text-gradient mb-4">
-            Project Title
+            {project.title}
           </h1>
           <p className="text-xl md:text-2xl mb-8">
             A glimpse into our futuristic design and innovative solutions.
@@ -25,25 +56,27 @@ export default function ProjectDetailsPage() {
       <section className="py-20 px-6">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-4xl font-bold mb-6">Project Overview</h2>
-          <p className="text-lg text-gray-300 mb-8">
-            This project embodies our commitment to innovation, sustainability,
-            and luxury. Developed using cutting-edge technology and design, it
-            stands as a benchmark in modern architecture.
-          </p>
+          <p className="text-lg text-gray-300 mb-8">{project.overview}</p>
           <ul className="list-disc list-inside text-lg text-gray-300 space-y-3">
             <li>
-              <span className="font-semibold">Location:</span> City, Country
+              <span className="font-semibold">Location:</span>{" "}
+              {project.location}
             </li>
             <li>
-              <span className="font-semibold">Year Completed:</span> 2023
+              <span className="font-semibold">Year Completed:</span>{" "}
+              {project.year_completed}
             </li>
             <li>
-              <span className="font-semibold">Project Type:</span> Residential /
-              Commercial / Mixed-use
+              <span className="font-semibold">Project Type:</span>{" "}
+              {project.project_type}
             </li>
             <li>
-              <span className="font-semibold">Key Features:</span> Sustainable
-              design, smart technology integration, luxury finishes.
+              <span className="font-semibold">Key Features:</span>
+              <ul className="ml-4 mt-2">
+                {keyFeatures.map((feature, index) => (
+                  <li key={index}>{feature}</li>
+                ))}
+              </ul>
             </li>
           </ul>
         </div>
@@ -56,39 +89,19 @@ export default function ProjectDetailsPage() {
             Project Gallery
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-            {[1, 2, 3, 4, 5, 6].map((i) => (
+            {project.gallery?.map((imgUrl, index) => (
               <div
-                key={i}
+                key={index}
                 className="overflow-hidden rounded-lg shadow-lg hover:shadow-2xl transition"
               >
                 <img
-                  src={`https://via.placeholder.com/600x400?text=Project+Image+${i}`}
-                  alt={`Project Image ${i}`}
+                  src={imgUrl}
+                  alt={`Project Image ${index + 1}`}
                   className="w-full h-64 object-cover"
                 />
               </div>
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* DETAILED DESCRIPTION */}
-      <section className="py-20 px-6">
-        <div className="max-w-4xl mx-auto">
-          <h2 className="text-4xl font-bold mb-6">Detailed Description</h2>
-          <p className="text-lg text-gray-300 mb-8">
-            In this section, we describe the project in depth—from the initial
-            concept and design challenges to the final execution and impact. Our
-            team integrated the latest in sustainable practices and modern
-            aesthetics to create a space that is both functional and visually
-            stunning.
-          </p>
-          <p className="text-lg text-gray-300">
-            The project features advanced smart technologies, eco-friendly
-            materials, and bespoke design elements that ensure a unique and
-            immersive experience. Client testimonials, industry accolades, and
-            media coverage further validate its excellence.
-          </p>
         </div>
       </section>
 
