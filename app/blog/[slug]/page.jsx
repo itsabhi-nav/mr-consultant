@@ -117,7 +117,6 @@ export default function SinglePostPage() {
             className="w-full h-full object-cover"
           />
         </div>
-        {/* Optional Table of Contents */}
         <TableOfContents content={post.content} />
         <article className="prose prose-invert max-w-none">
           <h1 className="text-4xl font-extrabold mb-2 glow">{post.title}</h1>
@@ -129,6 +128,24 @@ export default function SinglePostPage() {
             dangerouslySetInnerHTML={{ __html: post.content }}
           />
         </article>
+        {/* Gallery Section */}
+        {post.gallery &&
+          Array.isArray(post.gallery) &&
+          post.gallery.length > 0 && (
+            <div className="mt-8">
+              <h3 className="text-2xl font-bold mb-4">Gallery</h3>
+              <div className="grid grid-cols-2 gap-4">
+                {post.gallery.map((imgUrl, index) => (
+                  <img
+                    key={index}
+                    src={imgUrl}
+                    alt={`Gallery image ${index + 1}`}
+                    className="w-full h-auto rounded shadow-md"
+                  />
+                ))}
+              </div>
+            </div>
+          )}
         {post.author && (
           <div className="flex items-center gap-4 bg-black bg-opacity-50 p-4 rounded-xl">
             {post.author.avatar && (

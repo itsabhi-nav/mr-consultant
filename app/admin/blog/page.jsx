@@ -34,7 +34,7 @@ function Notification({ message, type, onClose }) {
   );
 }
 
-// Helper to generate a slug
+// Helper to generate a slug from the title.
 function generateSlug(title) {
   return title
     .toLowerCase()
@@ -48,8 +48,9 @@ export default function AdminBlogPanel() {
   const [notification, setNotification] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
   const [deletingPostIds, setDeletingPostIds] = useState([]);
+  const [editId, setEditId] = useState(null);
 
-  // Form state for new blog post including author details
+  // Form state for blog post (for both new & editing)
   const [form, setForm] = useState({
     title: "",
     excerpt: "",
@@ -58,17 +59,23 @@ export default function AdminBlogPanel() {
     featured: false,
     authorName: "",
     authorBio: "",
-    authorAvatar: "", // Optional URL
+    authorAvatar: "",
   });
   const [file, setFile] = useState(null); // Cover image file
   const [coverImagePreview, setCoverImagePreview] = useState(null);
   const [resetKey, setResetKey] = useState(0);
 
-  // New state for author avatar file upload
+  // Author avatar file and preview
   const [avatarFile, setAvatarFile] = useState(null);
   const [avatarPreview, setAvatarPreview] = useState(null);
 
-  // Valid blog categories for admin (and public filtering)
+  // Gallery files and previews
+  const [galleryFiles, setGalleryFiles] = useState([]);
+  const [galleryPreviews, setGalleryPreviews] = useState([]);
+  // State to hold the existing gallery (when editing)
+  const [existingGallery, setExistingGallery] = useState([]);
+
+  // Valid blog categories (matches public filtering)
   const BLOG_CATEGORIES = [
     "Land Development",
     "Real Estate",
@@ -123,6 +130,7 @@ export default function AdminBlogPanel() {
   async function handleSubmit(e) {
     e.preventDefault();
     setIsUploading(true);
+
     let imageUrl = "";
     if (file) {
       try {
@@ -134,7 +142,22 @@ export default function AdminBlogPanel() {
         return;
       }
     }
-    // Process author avatar: if a file is uploaded, use that; else if a URL is entered, use it; else use dummy.
+
+    // Process gallery files: if new files are uploaded, upload them; otherwise (when editing), keep the existing gallery.
+    let galleryUrls = [];
+    if (galleryFiles && galleryFiles.length > 0) {
+      try {
+        const uploads = galleryFiles.map((f) => uploadFileToCloudinary(f));
+        galleryUrls = await Promise.all(uploads);
+      } catch (error) {
+        console.error("Gallery image upload failed:", error);
+        showNotification("Gallery image upload failed", "error");
+      }
+    } else if (editId) {
+      galleryUrls = existingGallery;
+    }
+
+    // Process author avatar: file uploaded, URL entered, or dummy.
     let avatarUrl = "";
     if (avatarFile) {
       try {
@@ -148,49 +171,91 @@ export default function AdminBlogPanel() {
     } else if (form.authorAvatar.trim() !== "") {
       avatarUrl = form.authorAvatar;
     } else {
-      avatarUrl = "https://via.placeholder.com/150"; // Dummy avatar URL
+      avatarUrl = "https://via.placeholder.com/150";
     }
 
-    const newPost = {
+    const postData = {
       title: form.title,
       slug: generateSlug(form.title),
       excerpt: form.excerpt,
       content: form.content,
       category: form.category,
       isfeatured: form.featured,
-      coverimage: imageUrl,
+      coverimage: imageUrl || (editId ? undefined : ""),
+      gallery: galleryUrls,
       author: {
         name: form.authorName,
         bio: form.authorBio,
         avatar: avatarUrl,
       },
-      likes: 0,
     };
 
-    const { error } = await supabase.from("blog_posts").insert([newPost]);
-    if (error) {
-      console.error("Error inserting blog post:", error);
-      showNotification("Error inserting blog post", "error");
+    if (editId) {
+      // Update mode
+      const { error } = await supabase
+        .from("blog_posts")
+        .update(postData)
+        .eq("id", editId);
+      if (error) {
+        console.error("Error updating blog post:", error);
+        showNotification("Error updating blog post", "error");
+      } else {
+        showNotification("Blog post updated successfully!", "success");
+        setEditId(null);
+        fetchBlogPosts();
+      }
     } else {
-      showNotification("Blog post added successfully!", "success");
-      setForm({
-        title: "",
-        excerpt: "",
-        content: "",
-        category: "Real Estate",
-        featured: false,
-        authorName: "",
-        authorBio: "",
-        authorAvatar: "",
-      });
-      setFile(null);
-      setCoverImagePreview(null);
-      setAvatarFile(null);
-      setAvatarPreview(null);
-      setResetKey((prev) => prev + 1);
-      fetchBlogPosts();
+      // Insert new post
+      postData.likes = 0;
+      const { error } = await supabase.from("blog_posts").insert([postData]);
+      if (error) {
+        console.error("Error inserting blog post:", error);
+        showNotification("Error inserting blog post", "error");
+      } else {
+        showNotification("Blog post added successfully!", "success");
+        fetchBlogPosts();
+      }
     }
+
+    // Reset form and file inputs
+    setForm({
+      title: "",
+      excerpt: "",
+      content: "",
+      category: "Real Estate",
+      featured: false,
+      authorName: "",
+      authorBio: "",
+      authorAvatar: "",
+    });
+    setFile(null);
+    setCoverImagePreview(null);
+    setAvatarFile(null);
+    setAvatarPreview(null);
+    setGalleryFiles([]);
+    setGalleryPreviews([]);
+    setExistingGallery([]);
+    setResetKey((prev) => prev + 1);
     setIsUploading(false);
+  }
+
+  // Populate form for editing a post.
+  function handleEdit(post) {
+    setEditId(post.id);
+    setForm({
+      title: post.title,
+      excerpt: post.excerpt,
+      content: post.content,
+      category: post.category,
+      featured: post.isfeatured,
+      authorName: post.author?.name || "",
+      authorBio: post.author?.bio || "",
+      authorAvatar: post.author?.avatar || "",
+    });
+    setCoverImagePreview(post.coverimage);
+    setAvatarPreview(post.author?.avatar || "");
+    setExistingGallery(post.gallery || []);
+    setGalleryPreviews(post.gallery || []);
   }
 
   async function deleteBlogPost(post) {
@@ -232,7 +297,9 @@ export default function AdminBlogPanel() {
           onClose={() => setNotification(null)}
         />
       )}
-      <h1 className="text-3xl font-bold mb-6">Edit Blog Posts</h1>
+      <h1 className="text-3xl font-bold mb-6">
+        {editId ? "Edit Blog Post" : "Add Blog Post"}
+      </h1>
       <div className="mb-6">
         <Link href="/admin/projects">
           <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition mr-4">
@@ -244,6 +311,29 @@ export default function AdminBlogPanel() {
             Edit Blog Posts
           </button>
         </Link>
+        {editId && (
+          <button
+            onClick={() => {
+              setEditId(null);
+              setForm({
+                title: "",
+                excerpt: "",
+                content: "",
+                category: "Real Estate",
+                featured: false,
+                authorName: "",
+                authorBio: "",
+                authorAvatar: "",
+              });
+              setCoverImagePreview(null);
+              setAvatarPreview(null);
+              setExistingGallery([]);
+            }}
+            className="ml-4 px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-600 transition"
+          >
+            Cancel Edit
+          </button>
+        )}
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Form Section */}
@@ -399,6 +489,34 @@ export default function AdminBlogPanel() {
                 )}
               </div>
             </div>
+            <div>
+              <label className="block mb-2 font-semibold">
+                Upload Gallery Images
+              </label>
+              <input
+                type="file"
+                multiple
+                onChange={(e) => {
+                  const files = Array.from(e.target.files);
+                  setGalleryFiles(files);
+                  const previews = files.map((f) => URL.createObjectURL(f));
+                  setGalleryPreviews(previews);
+                }}
+                className="block mt-2 text-white bg-gray-800 border border-gray-700 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-neonBlue"
+              />
+              {galleryPreviews.length > 0 && (
+                <div className="mt-2 grid grid-cols-2 gap-2">
+                  {galleryPreviews.map((preview, index) => (
+                    <img
+                      key={index}
+                      src={preview}
+                      alt={`Gallery Preview ${index + 1}`}
+                      className="rounded shadow-md"
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
             <button
               type="submit"
               disabled={isUploading}
@@ -411,8 +529,10 @@ export default function AdminBlogPanel() {
               {isUploading ? (
                 <div className="flex items-center justify-center">
                   <div className="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-black mr-2"></div>
-                  Uploading...
+                  {editId ? "Updating..." : "Uploading..."}
                 </div>
+              ) : editId ? (
+                "Update Blog Post"
               ) : (
                 "Add Blog Post"
               )}
@@ -434,6 +554,12 @@ export default function AdminBlogPanel() {
                 >
                   <span className="text-lg font-semibold">{post.title}</span>
                   <div className="flex gap-2">
+                    <button
+                      onClick={() => handleEdit(post)}
+                      className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
+                    >
+                      Edit
+                    </button>
                     <Link href={`/blog/${post.slug}`}>
                       <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
                         View
