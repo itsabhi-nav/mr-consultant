@@ -228,7 +228,7 @@ export default function Header() {
               </div>
 
               <Link
-                href="#about"
+                href="/#about"
                 className="hover:text-neonBlue transition font-medium"
                 onClick={() => setNavOpen(false)}
               >
@@ -240,6 +240,14 @@ export default function Header() {
                 onClick={() => setNavOpen(false)}
               >
                 Contact
+              </Link>
+
+              <Link
+                href="/blog"
+                className="hover:text-neonBlue transition font-medium"
+                onClick={() => setNavOpen(false)}
+              >
+                Blog
               </Link>
 
               {/* 🔹 Admin Login for Mobile */}
