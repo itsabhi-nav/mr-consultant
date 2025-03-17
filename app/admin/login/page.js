@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import { supabase } from "../../lib/supabaseClient";
 import { FaTrashAlt } from "react-icons/fa";
 import { MdCheckCircle, MdError } from "react-icons/md";
@@ -61,7 +62,10 @@ const SERVICES = [
 ];
 
 export default function AdminDashboard() {
+  const router = useRouter();
   const session = useSession();
+  const [choice, setChoice] = useState(null);
+
   const [service, setService] = useState("real-estate");
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -326,6 +330,35 @@ export default function AdminDashboard() {
     );
   }
 
+  // NEW: Show a choice prompt if the admin hasn't selected what to edit yet
+  if (!choice) {
+    return (
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white flex flex-col items-center justify-center p-6"
+      >
+        <h1 className="text-3xl font-bold mb-6">Admin Dashboard</h1>
+        <p className="mb-4 text-lg">What would you like to edit?</p>
+        <div className="flex gap-8">
+          <button
+            onClick={() => setChoice("services")}
+            className="px-6 py-3 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+          >
+            Edit Services
+          </button>
+          <button
+            onClick={() => router.push("/admin/blog")}
+            className="px-6 py-3 bg-neonBlue text-black rounded hover:bg-neonBlue/80 transition"
+          >
+            Edit Blog Posts
+          </button>
+        </div>
+      </motion.div>
+    );
+  }
+
+  // Preexisting Admin Dashboard (Services Editing) remains unchanged
   return (
     <>
       {notification && (

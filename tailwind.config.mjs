@@ -1,16 +1,16 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
-    "./app/**/*.{js,ts,jsx,tsx}", // Next.js 13
+    "./app/**/*.{js,ts,jsx,tsx}",
     "./pages/**/*.{js,ts,jsx,tsx}",
     "./components/**/*.{js,ts,jsx,tsx}",
   ],
+  // darkMode: 'class', // optional if using next-themes
   theme: {
     extend: {
       colors: {
         neonBlue: "#00f0ff",
         neonPink: "#ff00f0",
-        // etc.
       },
       backgroundImage: {
         "hero-radial":
@@ -28,6 +28,15 @@ module.exports = {
     },
   },
   plugins: [
-    require("@tailwindcss/line-clamp"), // <--- Add the line clamp plugin here
+    require("@tailwindcss/line-clamp"),
+    require("@tailwindcss/typography"),
+    function ({ addUtilities }) {
+      const newUtilities = {
+        ".glow": {
+          textShadow: "0 0 5px #00fff7, 0 0 10px #00fff7",
+        },
+      };
+      addUtilities(newUtilities, ["responsive", "hover"]);
+    },
   ],
 };

@@ -119,7 +119,7 @@ export default function Header() {
           </div>
 
           <Link
-            href="#about"
+            href="/#about"
             className="hover:text-neonBlue transition font-medium"
           >
             About
@@ -129,6 +129,13 @@ export default function Header() {
             className="hover:text-neonBlue transition font-medium"
           >
             Contact
+          </Link>
+
+          <Link
+            href="/blog"
+            className="hover:text-neonBlue transition font-medium"
+          >
+            Blog
           </Link>
 
           {/* 🔹 Admin Login Button */}
