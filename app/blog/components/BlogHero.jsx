@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Link from "next/link";
 
 export default function BlogHero() {
   return (
@@ -25,9 +26,11 @@ export default function BlogHero() {
         transition={{ duration: 0.6, delay: 0.3 }}
         className="mt-6 flex flex-col sm:flex-row gap-4"
       >
-        <button className="px-6 py-3 bg-blue-500 text-white rounded-full text-lg font-medium hover:bg-blue-600 transition">
-          Explore Our Services
-        </button>
+        <Link href="/#services" passHref>
+          <button className="px-6 py-3 bg-blue-500 text-white rounded-full text-lg font-medium hover:bg-blue-600 transition">
+            Explore Our Services
+          </button>
+        </Link>
         <button className="px-6 py-3 bg-transparent border border-white text-white rounded-full text-lg font-medium hover:bg-white hover:text-black transition">
           Download Brochure
         </button>

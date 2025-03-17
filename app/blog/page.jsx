@@ -43,16 +43,22 @@ export default function BlogIndexPage() {
     fetchPosts();
   }, []);
 
+  // Featured post: first post with isFeatured true.
   const featuredPost = posts.find((post) => post.isFeatured);
+
+  // Filtering: make category comparison case-insensitive and trim whitespace.
   const filteredPosts = posts.filter((post) => {
     if (post.isFeatured) return false;
     const matchesSearch = post.title
       .toLowerCase()
       .includes(searchQuery.toLowerCase());
     const matchesCategory =
-      !selectedCategory || post.category === selectedCategory;
+      !selectedCategory ||
+      post.category.trim().toLowerCase() ===
+        selectedCategory.trim().toLowerCase();
     return matchesSearch && matchesCategory;
   });
+
   const totalPages = Math.ceil(filteredPosts.length / postsPerPage);
   const startIndex = (currentPage - 1) * postsPerPage;
   const displayedPosts = filteredPosts.slice(
@@ -72,9 +78,15 @@ export default function BlogIndexPage() {
 
   return (
     <div className="space-y-10">
+      {/* Hero Section */}
       <BlogHero />
+
+      {/* Featured Post */}
       {featuredPost && <FeaturedPost post={featuredPost} />}
+
+      {/* Main Content: Search, Filter, and Posts */}
       <div className="flex flex-col lg:flex-row gap-8">
+        {/* Left Column */}
         <div className="w-full lg:w-2/3">
           <div className="flex flex-col sm:flex-row gap-4 mb-8">
             <SearchBar onSearch={handleSearch} />
@@ -107,6 +119,8 @@ export default function BlogIndexPage() {
             onPageChange={setCurrentPage}
           />
         </div>
+
+        {/* Right Column (Sidebar) */}
         <div className="w-full lg:w-1/3">
           <BlogSidebar />
         </div>

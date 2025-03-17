@@ -1,10 +1,42 @@
 "use client";
 
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import { supabase } from "@/lib/supabaseClient";
 
 export default function BlogSidebar() {
+  const [popularPosts, setPopularPosts] = useState([]);
+
+  useEffect(() => {
+    async function fetchPopularPosts() {
+      const { data, error } = await supabase
+        .from("blog_posts")
+        .select("id, slug, title")
+        .order("likes", { ascending: false })
+        .limit(3);
+      if (error) {
+        console.error("Error fetching popular posts:", error);
+      } else {
+        setPopularPosts(data);
+      }
+    }
+    fetchPopularPosts();
+  }, []);
+
   return (
     <aside className="bg-black bg-opacity-50 p-6 rounded-xl sticky top-24 space-y-6">
+      {/* Popular Posts */}
+      <div>
+        <h3 className="text-xl font-bold mb-4">Popular Posts</h3>
+        <ul className="space-y-2 text-neonBlue">
+          {popularPosts.map((post) => (
+            <li key={post.id}>
+              <Link href={`/blog/${post.slug}`}>{post.title}</Link>
+            </li>
+          ))}
+        </ul>
+      </div>
+
       {/* Subscribe */}
       <div className="space-y-4">
         <h3 className="text-xl font-bold">Subscribe</h3>
@@ -21,60 +53,6 @@ export default function BlogSidebar() {
             Join
           </button>
         </div>
-      </div>
-      {/* Popular Posts */}
-      <div>
-        <h3 className="text-xl font-bold mb-4">Popular Posts</h3>
-        <ul className="space-y-2 text-neonBlue">
-          <li>
-            <Link href="/blog/futuristic-real-estate-trends">
-              Futuristic Real Estate Trends
-            </Link>
-          </li>
-          <li>
-            <Link href="/blog/building-construction-in-2030">
-              Building Construction in 2030
-            </Link>
-          </li>
-        </ul>
-      </div>
-      {/* Categories */}
-      <div>
-        <h3 className="text-xl font-bold mb-4">Categories</h3>
-        <ul className="space-y-2">
-          <li>
-            <Link
-              href="/blog?category=Land Development"
-              className="hover:text-neonBlue"
-            >
-              Land Development
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="/blog?category=Real Estate"
-              className="hover:text-neonBlue"
-            >
-              Real Estate
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="/blog?category=Building Construction"
-              className="hover:text-neonBlue"
-            >
-              Building Construction
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="/blog?category=Interior Design"
-              className="hover:text-neonBlue"
-            >
-              Interior Design
-            </Link>
-          </li>
-        </ul>
       </div>
     </aside>
   );

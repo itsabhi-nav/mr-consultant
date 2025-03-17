@@ -34,7 +34,7 @@ function Notification({ message, type, onClose }) {
   );
 }
 
-// Helper to generate a URL-friendly slug from the title.
+// Helper to generate a slug
 function generateSlug(title) {
   return title
     .toLowerCase()
@@ -58,7 +58,7 @@ export default function AdminBlogPanel() {
     featured: false,
     authorName: "",
     authorBio: "",
-    authorAvatar: "", // Optional URL input
+    authorAvatar: "", // Optional URL
   });
   const [file, setFile] = useState(null); // Cover image file
   const [coverImagePreview, setCoverImagePreview] = useState(null);
@@ -134,7 +134,7 @@ export default function AdminBlogPanel() {
         return;
       }
     }
-    // Process author avatar: if file uploaded, upload it; else if a URL is entered, use it; else use dummy.
+    // Process author avatar: if a file is uploaded, use that; else if a URL is entered, use it; else use dummy.
     let avatarUrl = "";
     if (avatarFile) {
       try {
