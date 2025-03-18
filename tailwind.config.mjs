@@ -32,9 +32,9 @@ module.exports = {
     require("@tailwindcss/typography"),
     function ({ addUtilities }) {
       const newUtilities = {
-        ".glow": {
-          textShadow: "0 0 5px #00fff7, 0 0 10px #00fff7",
-        },
+        // ".glow": {
+        //   textShadow: "0 0 5px #00fff7, 0 0 10px #00fff7",
+        // },
       };
       addUtilities(newUtilities, ["responsive", "hover"]);
     },
